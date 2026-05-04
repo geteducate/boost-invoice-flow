@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, BadgeCheck, BarChart3, Bell, Building2, CheckCircle2, ClipboardList, Cloud, FileText, Lock, Receipt, Send, ShieldCheck, Sparkles, Star, TrendingUp, Users, Workflow, Zap } from "lucide-react";
 import { MarketingLayout } from "@/components/MarketingLayout";
+import { SiteFooter } from "@/components/SiteFooter";
 import { DashboardPreview } from "@/components/DashboardPreview";
 import { Section } from "@/components/Section";
 import { TestimonialsCarousel } from "@/components/TestimonialsCarousel";
