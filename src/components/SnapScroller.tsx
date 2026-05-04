@@ -108,14 +108,14 @@ export function SnapScroller({
   );
 }
 
-export function SnapSectionWrap({ id, children }: { id: string; children: React.ReactNode }) {
+export function SnapSectionWrap({ id, children, full = true }: { id: string; children: React.ReactNode; full?: boolean }) {
   const { active } = useScroller() ?? { active: "" };
   const isActive = active === id;
   return (
     <section
       id={`snap-${id}`}
       data-snap-id={id}
-      className="relative flex min-h-[calc(100vh-4rem)] w-full snap-start snap-always items-center"
+      className={`relative flex w-full snap-start snap-always ${full ? "h-[calc(100vh-4rem)] items-center overflow-y-auto" : "min-h-[calc(100vh-4rem)] items-center"}`}
     >
       <AnimatePresence mode="wait">
         <motion.div
