@@ -18,6 +18,15 @@ import { Route as ContactRouteImport } from './routes/contact'
 import { Route as AppRouteImport } from './routes/app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppIndexRouteImport } from './routes/app.index'
+import { Route as AppSettingsRouteImport } from './routes/app.settings'
+import { Route as AppProjectsRouteImport } from './routes/app.projects'
+import { Route as AppPaymentsRouteImport } from './routes/app.payments'
+import { Route as AppMilestonesRouteImport } from './routes/app.milestones'
+import { Route as AppMessagesRouteImport } from './routes/app.messages'
+import { Route as AppInvoicesRouteImport } from './routes/app.invoices'
+import { Route as AppIntegrationsRouteImport } from './routes/app.integrations'
+import { Route as AppClientsRouteImport } from './routes/app.clients'
+import { Route as AppAnalyticsRouteImport } from './routes/app.analytics'
 
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
@@ -64,6 +73,51 @@ const AppIndexRoute = AppIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AppRoute,
 } as any)
+const AppSettingsRoute = AppSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppProjectsRoute = AppProjectsRouteImport.update({
+  id: '/projects',
+  path: '/projects',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPaymentsRoute = AppPaymentsRouteImport.update({
+  id: '/payments',
+  path: '/payments',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppMilestonesRoute = AppMilestonesRouteImport.update({
+  id: '/milestones',
+  path: '/milestones',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppMessagesRoute = AppMessagesRouteImport.update({
+  id: '/messages',
+  path: '/messages',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppInvoicesRoute = AppInvoicesRouteImport.update({
+  id: '/invoices',
+  path: '/invoices',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppIntegrationsRoute = AppIntegrationsRouteImport.update({
+  id: '/integrations',
+  path: '/integrations',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppClientsRoute = AppClientsRouteImport.update({
+  id: '/clients',
+  path: '/clients',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAnalyticsRoute = AppAnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -74,6 +128,15 @@ export interface FileRoutesByFullPath {
   '/pricing': typeof PricingRoute
   '/service': typeof ServiceRoute
   '/signup': typeof SignupRoute
+  '/app/analytics': typeof AppAnalyticsRoute
+  '/app/clients': typeof AppClientsRoute
+  '/app/integrations': typeof AppIntegrationsRoute
+  '/app/invoices': typeof AppInvoicesRoute
+  '/app/messages': typeof AppMessagesRoute
+  '/app/milestones': typeof AppMilestonesRoute
+  '/app/payments': typeof AppPaymentsRoute
+  '/app/projects': typeof AppProjectsRoute
+  '/app/settings': typeof AppSettingsRoute
   '/app/': typeof AppIndexRoute
 }
 export interface FileRoutesByTo {
@@ -84,6 +147,15 @@ export interface FileRoutesByTo {
   '/pricing': typeof PricingRoute
   '/service': typeof ServiceRoute
   '/signup': typeof SignupRoute
+  '/app/analytics': typeof AppAnalyticsRoute
+  '/app/clients': typeof AppClientsRoute
+  '/app/integrations': typeof AppIntegrationsRoute
+  '/app/invoices': typeof AppInvoicesRoute
+  '/app/messages': typeof AppMessagesRoute
+  '/app/milestones': typeof AppMilestonesRoute
+  '/app/payments': typeof AppPaymentsRoute
+  '/app/projects': typeof AppProjectsRoute
+  '/app/settings': typeof AppSettingsRoute
   '/app': typeof AppIndexRoute
 }
 export interface FileRoutesById {
@@ -96,6 +168,15 @@ export interface FileRoutesById {
   '/pricing': typeof PricingRoute
   '/service': typeof ServiceRoute
   '/signup': typeof SignupRoute
+  '/app/analytics': typeof AppAnalyticsRoute
+  '/app/clients': typeof AppClientsRoute
+  '/app/integrations': typeof AppIntegrationsRoute
+  '/app/invoices': typeof AppInvoicesRoute
+  '/app/messages': typeof AppMessagesRoute
+  '/app/milestones': typeof AppMilestonesRoute
+  '/app/payments': typeof AppPaymentsRoute
+  '/app/projects': typeof AppProjectsRoute
+  '/app/settings': typeof AppSettingsRoute
   '/app/': typeof AppIndexRoute
 }
 export interface FileRouteTypes {
@@ -109,6 +190,15 @@ export interface FileRouteTypes {
     | '/pricing'
     | '/service'
     | '/signup'
+    | '/app/analytics'
+    | '/app/clients'
+    | '/app/integrations'
+    | '/app/invoices'
+    | '/app/messages'
+    | '/app/milestones'
+    | '/app/payments'
+    | '/app/projects'
+    | '/app/settings'
     | '/app/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -119,6 +209,15 @@ export interface FileRouteTypes {
     | '/pricing'
     | '/service'
     | '/signup'
+    | '/app/analytics'
+    | '/app/clients'
+    | '/app/integrations'
+    | '/app/invoices'
+    | '/app/messages'
+    | '/app/milestones'
+    | '/app/payments'
+    | '/app/projects'
+    | '/app/settings'
     | '/app'
   id:
     | '__root__'
@@ -130,6 +229,15 @@ export interface FileRouteTypes {
     | '/pricing'
     | '/service'
     | '/signup'
+    | '/app/analytics'
+    | '/app/clients'
+    | '/app/integrations'
+    | '/app/invoices'
+    | '/app/messages'
+    | '/app/milestones'
+    | '/app/payments'
+    | '/app/projects'
+    | '/app/settings'
     | '/app/'
   fileRoutesById: FileRoutesById
 }
@@ -209,14 +317,95 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppIndexRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/settings': {
+      id: '/app/settings'
+      path: '/settings'
+      fullPath: '/app/settings'
+      preLoaderRoute: typeof AppSettingsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/projects': {
+      id: '/app/projects'
+      path: '/projects'
+      fullPath: '/app/projects'
+      preLoaderRoute: typeof AppProjectsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/payments': {
+      id: '/app/payments'
+      path: '/payments'
+      fullPath: '/app/payments'
+      preLoaderRoute: typeof AppPaymentsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/milestones': {
+      id: '/app/milestones'
+      path: '/milestones'
+      fullPath: '/app/milestones'
+      preLoaderRoute: typeof AppMilestonesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/messages': {
+      id: '/app/messages'
+      path: '/messages'
+      fullPath: '/app/messages'
+      preLoaderRoute: typeof AppMessagesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/invoices': {
+      id: '/app/invoices'
+      path: '/invoices'
+      fullPath: '/app/invoices'
+      preLoaderRoute: typeof AppInvoicesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/integrations': {
+      id: '/app/integrations'
+      path: '/integrations'
+      fullPath: '/app/integrations'
+      preLoaderRoute: typeof AppIntegrationsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/clients': {
+      id: '/app/clients'
+      path: '/clients'
+      fullPath: '/app/clients'
+      preLoaderRoute: typeof AppClientsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/analytics': {
+      id: '/app/analytics'
+      path: '/analytics'
+      fullPath: '/app/analytics'
+      preLoaderRoute: typeof AppAnalyticsRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
 interface AppRouteChildren {
+  AppAnalyticsRoute: typeof AppAnalyticsRoute
+  AppClientsRoute: typeof AppClientsRoute
+  AppIntegrationsRoute: typeof AppIntegrationsRoute
+  AppInvoicesRoute: typeof AppInvoicesRoute
+  AppMessagesRoute: typeof AppMessagesRoute
+  AppMilestonesRoute: typeof AppMilestonesRoute
+  AppPaymentsRoute: typeof AppPaymentsRoute
+  AppProjectsRoute: typeof AppProjectsRoute
+  AppSettingsRoute: typeof AppSettingsRoute
   AppIndexRoute: typeof AppIndexRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
+  AppAnalyticsRoute: AppAnalyticsRoute,
+  AppClientsRoute: AppClientsRoute,
+  AppIntegrationsRoute: AppIntegrationsRoute,
+  AppInvoicesRoute: AppInvoicesRoute,
+  AppMessagesRoute: AppMessagesRoute,
+  AppMilestonesRoute: AppMilestonesRoute,
+  AppPaymentsRoute: AppPaymentsRoute,
+  AppProjectsRoute: AppProjectsRoute,
+  AppSettingsRoute: AppSettingsRoute,
   AppIndexRoute: AppIndexRoute,
 }
 
