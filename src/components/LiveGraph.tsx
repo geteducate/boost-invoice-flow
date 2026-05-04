@@ -11,10 +11,10 @@ export function LiveGraph() {
   const POINTS = 32;
   const [series, setSeries] = useState<number[]>(() => {
     const out: number[] = [];
-    let v = 70;
+    let v = 12;
     for (let i = 0; i < POINTS; i++) {
-      v += (Math.random() - 0.45) * 8 + 0.6;
-      out.push(Math.max(40, Math.min(180, v)));
+      v += (Math.random() - 0.45) * 3 + 0.15;
+      out.push(Math.max(6, Math.min(34, v)));
     }
     return out;
   });
@@ -26,10 +26,10 @@ export function LiveGraph() {
     const tick = () => {
       setSeries((prev) => {
         const last = prev[prev.length - 1];
-        const next = Math.max(45, Math.min(185, last + (Math.random() - 0.45) * 14 + 0.4));
+        const next = Math.max(6, Math.min(36, last + (Math.random() - 0.45) * 4 + 0.1));
         return [...prev.slice(1), next];
       });
-      setToday((t) => t + Math.floor(Math.random() * 3));
+      setToday((t) => t + (Math.random() < 0.4 ? 1 : 0));
       setPulse((p) => p + 1);
     };
     tRef.current = window.setInterval(tick, 1600);
@@ -124,9 +124,9 @@ export function LiveGraph() {
       </div>
 
       <div className="grid grid-cols-3 divide-x divide-border border-t border-border text-center">
-        <Stat label="Active sessions" value={Math.round(series[series.length - 1] / 3).toString()} />
-        <Stat label="Events / hour" value={Math.round(series.reduce((a, b) => a + b, 0) / series.length * 60).toLocaleString()} />
-        <Stat label="Today" value={`${(820 + today).toLocaleString()}`} />
+        <Stat label="Active sessions" value={Math.max(1, Math.round(series[series.length - 1] / 6)).toString()} />
+        <Stat label="Events / hour" value={Math.round(series.reduce((a, b) => a + b, 0) / series.length).toString()} />
+        <Stat label="Today" value={`${(74 + today).toLocaleString()}`} />
       </div>
     </div>
   );
