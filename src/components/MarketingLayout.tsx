@@ -36,7 +36,7 @@ export function MarketingLayout({ children, hideFooter = false }: { children: Re
           {children}
         </motion.main>
       </AnimatePresence>
-      <SiteFooter />
+      {!hideFooter && <SiteFooter />}
     </div>
   );
 }
