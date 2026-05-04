@@ -306,10 +306,9 @@ function Proof() {
         </div>
       </div>
 
-      <Testimonials />
-      </Section>
-    );
-  }
+    </Section>
+  );
+}
 
 function Testimonials() {
   const featured = {
