@@ -306,6 +306,7 @@ function Proof() {
         </div>
       </div>
 
+      <Testimonials />
     </Section>
   );
 }
