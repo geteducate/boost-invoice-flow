@@ -33,6 +33,7 @@ const SECTIONS = [
   { id: "pricing", label: "Pricing" },
   { id: "faq", label: "FAQ" },
   { id: "cta", label: "Get started" },
+  { id: "footer", label: "Footer" },
 ];
 
 function HomePage() {
