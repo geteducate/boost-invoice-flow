@@ -74,8 +74,8 @@ export function SnapScroller({
         </div>
       </div>
 
-      {/* Side dots */}
-      <div className="fixed right-5 top-1/2 z-40 hidden -translate-y-1/2 flex-col items-center gap-3 md:flex">
+      {/* Side dots — minimal, transparent, no labels */}
+      <div className="fixed right-3 top-1/2 z-40 hidden -translate-y-1/2 flex-col items-center gap-2 md:flex">
         {sections.map((s) => {
           const isActive = active === s.id;
           return (
@@ -83,20 +83,13 @@ export function SnapScroller({
               key={s.id}
               onClick={() => go(s.id)}
               aria-label={`Go to ${s.label}`}
-              className="group relative flex items-center"
+              className="group flex h-4 w-4 items-center justify-center"
             >
-              <span
-                className={`absolute right-6 whitespace-nowrap rounded-full border border-border bg-background/90 px-2.5 py-1 text-[11px] font-semibold backdrop-blur-md transition-all ${
-                  isActive ? "opacity-100" : "opacity-0 group-hover:opacity-100"
-                }`}
-              >
-                {s.label}
-              </span>
               <span
                 className={`block rounded-full transition-all duration-300 ${
                   isActive
-                    ? "h-7 w-2.5 bg-gradient-to-b from-[var(--primary)] to-[var(--primary-glow)] shadow-glow"
-                    : "h-2.5 w-2.5 bg-border hover:bg-primary/50"
+                    ? "h-4 w-1.5 bg-primary/70"
+                    : "h-1.5 w-1.5 bg-foreground/15 group-hover:bg-foreground/40"
                 }`}
               />
             </button>
