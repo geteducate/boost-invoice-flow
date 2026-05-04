@@ -51,6 +51,7 @@ function HomePage() {
         <SnapSectionWrap id="pricing"><Pricing compact /></SnapSectionWrap>
         <SnapSectionWrap id="faq"><FAQ /></SnapSectionWrap>
         <SnapSectionWrap id="cta"><FinalCTA /></SnapSectionWrap>
+        <SnapSectionWrap id="footer" full={false}><SiteFooter /></SnapSectionWrap>
       </SnapScroller>
     </MarketingLayout>
   );
