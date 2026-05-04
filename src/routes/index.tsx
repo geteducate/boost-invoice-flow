@@ -26,6 +26,7 @@ function HomePage() {
       <Problem />
       <HowItWorks />
       <Features />
+      <RevenueSimulator />
       <Proof />
       <Trust />
       <Pricing compact />
