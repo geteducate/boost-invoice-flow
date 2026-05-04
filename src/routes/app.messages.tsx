@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AppShell, StatusPill } from "@/components/AppShell";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Mail, MessageCircle, Plus } from "lucide-react";
 
