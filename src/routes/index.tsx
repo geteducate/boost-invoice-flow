@@ -457,9 +457,7 @@ function Testimonials() {
           </div>
         ))}
       </div>
-      </div>
-  );
-    </Section>
+    </div>
   );
 }
 
