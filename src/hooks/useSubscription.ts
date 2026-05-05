@@ -21,7 +21,7 @@ export function useSubscription() {
   const [loading, setLoading] = useState(true);
 
   const fetchSub = async (userId: string) => {
-    const { data } = await supabase
+    const { data } = await (supabase as any)
       .from("subscriptions")
       .select("*")
       .eq("user_id", userId)
