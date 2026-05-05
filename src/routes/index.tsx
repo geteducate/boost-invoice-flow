@@ -1,10 +1,12 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { ArrowRight, BadgeCheck, BarChart3, Bell, Building2, CheckCircle2, ClipboardList, Cloud, FileText, Lock, Receipt, Send, ShieldCheck, Sparkles, Star, TrendingUp, Users, Workflow, Zap } from "lucide-react";
 import { MarketingLayout } from "@/components/MarketingLayout";
 import { RecoverySimulator } from "@/components/RecoverySimulator";
 import { DashboardPreview } from "@/components/DashboardPreview";
 import { Section } from "@/components/Section";
 import { Button } from "@/components/ui/button";
+import { usePaddleCheckout } from "@/hooks/usePaddleCheckout";
+import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -503,43 +505,18 @@ function Trust() {
 }
 
 export function PricingTable({ compact = false }: { compact?: boolean }) {
+  const { openCheckout, loading } = usePricingCheckout();
   const tiers = [
-    {
-      name: "Starter",
-      price: 39,
-      best: "Solo consultants & freelancers",
-      features: ["Up to 25 invoices / mo", "10 active clients", "Automated reminders", "Basic analytics"],
-      cta: "Free sign up",
-      featured: false,
-    },
-    {
-      name: "Pro",
-      price: 79,
-      best: "Small agencies & studios",
-      features: ["Up to 200 invoices / mo", "Unlimited clients", "Milestone automation", "Google Sheets sync", "Source & UTM tracking"],
-      cta: "Start free trial",
-      featured: true,
-    },
-    {
-      name: "Business",
-      price: 149,
-      best: "Multi-team service businesses",
-      features: ["Unlimited invoices", "Admin panel & roles", "Audit logs & exports", "Priority support", "Custom workflows"],
-      cta: "Book a demo",
-      featured: false,
-    },
+    { name: "Starter", priceId: "starter_monthly", price: 39, best: "Solo consultants & freelancers", features: ["Up to 25 invoices / mo", "10 active clients", "Automated reminders", "Basic analytics"], cta: "Subscribe", featured: false },
+    { name: "Pro", priceId: "pro_monthly", price: 79, best: "Small agencies & studios", features: ["Up to 200 invoices / mo", "Unlimited clients", "Milestone automation", "Google Sheets sync", "Source & UTM tracking"], cta: "Start 14-day trial", featured: true },
+    { name: "Business", priceId: "business_monthly", price: 149, best: "Multi-team service businesses", features: ["Unlimited invoices", "Admin panel & roles", "Audit logs & exports", "Priority support", "Custom workflows"], cta: "Start 14-day trial", featured: false },
   ];
   return (
     <div className="grid gap-5 md:grid-cols-3">
       {tiers.map((t) => (
-        <div
-          key={t.name}
-          className={`relative card-premium p-7 ${t.featured ? "border-primary/40 shadow-glow" : ""}`}
-        >
+        <div key={t.name} className={`relative card-premium p-7 ${t.featured ? "border-primary/40 shadow-glow" : ""}`}>
           {t.featured && (
-            <span className="absolute -top-3 left-7 rounded-full bg-cta px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-primary-foreground">
-              Most popular
-            </span>
+            <span className="absolute -top-3 left-7 rounded-full bg-cta px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-primary-foreground">Most popular</span>
           )}
           <p className="text-eyebrow">{t.name}</p>
           <div className="mt-3 flex items-end gap-1.5">
@@ -554,14 +531,35 @@ export function PricingTable({ compact = false }: { compact?: boolean }) {
               </li>
             ))}
           </ul>
-          <Button asChild className={`mt-7 h-11 w-full ${t.featured ? "bg-cta text-primary-foreground" : ""}`} variant={t.featured ? "default" : "outline"}>
-            <Link to="/signup">{t.cta}</Link>
+          <Button
+            onClick={() => openCheckout(t.priceId)}
+            disabled={loading}
+            className={`mt-7 h-11 w-full ${t.featured ? "bg-cta text-primary-foreground" : ""}`}
+            variant={t.featured ? "default" : "outline"}
+          >
+            {t.cta}
           </Button>
         </div>
       ))}
       {!compact && null}
     </div>
   );
+}
+
+function usePricingCheckout() {
+  const navigate = useNavigate();
+  const { openCheckout: open, loading } = usePaddleCheckout();
+  const openCheckout = async (priceId: string) => {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) { navigate({ to: "/signup" }); return; }
+    await open({
+      priceId,
+      customerEmail: session.user.email,
+      customData: { userId: session.user.id },
+      successUrl: `${window.location.origin}/app?checkout=success`,
+    });
+  };
+  return { openCheckout, loading };
 }
 
 function Pricing({ compact }: { compact?: boolean }) {

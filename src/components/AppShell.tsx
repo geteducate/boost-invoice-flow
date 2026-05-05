@@ -1,8 +1,11 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { ReactNode, useState } from "react";
-import { Bell, Building2, ChevronDown, FileText, Home, LayoutDashboard, ListChecks, Menu, MessageSquare, PieChart, Plug, Receipt, Search, Settings, Users, Wallet, X } from "lucide-react";
+import { Bell, Building2, ChevronDown, FileText, Home, LayoutDashboard, ListChecks, Loader2, Lock, Menu, MessageSquare, PieChart, Plug, Receipt, Search, Settings, Users, Wallet, X } from "lucide-react";
 import { Logo } from "./Logo";
 import { Input } from "./ui/input";
+import { PaymentTestModeBanner } from "./PaymentTestModeBanner";
+import { useSubscription } from "@/hooks/useSubscription";
+import { useSession } from "@/hooks/useSession";
 
 const items = [
   { to: "/app", label: "Dashboard", icon: LayoutDashboard, exact: true },
@@ -20,8 +23,14 @@ const items = [
 export function AppShell({ children, title, subtitle, actions }: { children: ReactNode; title?: string; subtitle?: string; actions?: ReactNode }) {
   const path = useRouterState({ select: (s) => s.location.pathname });
   const [open, setOpen] = useState(false);
+  const { session, loading: sessionLoading } = useSession();
+  const { isActive, loading: subLoading } = useSubscription();
+  const checking = sessionLoading || subLoading;
+  const gated = !!session && !checking && !isActive;
   return (
-    <div className="flex min-h-screen bg-surface">
+    <div className="flex min-h-screen flex-col bg-surface">
+      <PaymentTestModeBanner />
+      <div className="flex flex-1 min-h-0">
       {/* Sidebar */}
       <aside className={`fixed inset-y-0 left-0 z-40 w-64 transform border-r border-border bg-sidebar transition-transform lg:static lg:translate-x-0 ${open ? "translate-x-0" : "-translate-x-full"}`}>
         <div className="flex h-16 items-center justify-between border-b border-border px-5">
@@ -86,8 +95,18 @@ export function AppShell({ children, title, subtitle, actions }: { children: Rea
               {actions && <div className="flex flex-wrap gap-2">{actions}</div>}
             </div>
           )}
-          {children}
+          {checking && session ? (
+            <div className="flex items-center gap-2 text-sm text-muted-foreground"><Loader2 className="h-4 w-4 animate-spin" /> Checking subscription…</div>
+          ) : gated ? (
+            <div className="card-premium mx-auto max-w-xl p-8 text-center">
+              <span className="inline-flex h-12 w-12 items-center justify-center rounded-full bg-cta/10 text-cta"><Lock className="h-5 w-5" /></span>
+              <h2 className="mt-4 text-xl font-bold">Pick a plan to unlock the app</h2>
+              <p className="mt-2 text-sm text-muted-foreground">Your subscription is required to access dashboards, invoices, and automations.</p>
+              <Link to="/pricing" className="mt-5 inline-flex items-center justify-center rounded-lg bg-cta px-4 py-2 text-sm font-semibold text-primary-foreground">View plans</Link>
+            </div>
+          ) : children}
         </main>
+      </div>
       </div>
     </div>
   );
