@@ -83,11 +83,19 @@ export function AppShell({ children, title, subtitle, actions }: { children: Rea
             );
           })}
         </nav>
-        <div className="absolute inset-x-3 bottom-3 rounded-xl border border-border bg-card p-4">
-          <p className="text-xs font-semibold">Trial: 12 days left</p>
-          <p className="mt-1 text-xs text-muted-foreground">Upgrade to keep automations running.</p>
-          <Link to="/pricing" className="mt-3 inline-flex w-full items-center justify-center rounded-lg bg-cta px-3 py-2 text-xs font-semibold text-primary-foreground">Upgrade</Link>
-        </div>
+        {trialDaysLeft !== null ? (
+          <div className="absolute inset-x-3 bottom-3 rounded-xl border border-border bg-card p-4">
+            <p className="text-xs font-semibold">Trial: {trialDaysLeft} day{trialDaysLeft === 1 ? "" : "s"} left</p>
+            <p className="mt-1 text-xs text-muted-foreground">Your card will be charged when the trial ends.</p>
+            <Link to="/app/settings" className="mt-3 inline-flex w-full items-center justify-center rounded-lg bg-cta px-3 py-2 text-xs font-semibold text-primary-foreground">Manage</Link>
+          </div>
+        ) : !isActive && session ? (
+          <div className="absolute inset-x-3 bottom-3 rounded-xl border border-border bg-card p-4">
+            <p className="text-xs font-semibold">No active plan</p>
+            <p className="mt-1 text-xs text-muted-foreground">Pick a plan to unlock your dashboard.</p>
+            <Link to="/pricing" className="mt-3 inline-flex w-full items-center justify-center rounded-lg bg-cta px-3 py-2 text-xs font-semibold text-primary-foreground">View plans</Link>
+          </div>
+        ) : null}
       </aside>
 
       {open && <div className="fixed inset-0 z-30 bg-black/30 lg:hidden" onClick={() => setOpen(false)} />}
