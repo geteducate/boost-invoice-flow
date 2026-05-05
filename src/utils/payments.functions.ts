@@ -19,7 +19,7 @@ export const createPortalSession = createServerFn({ method: "POST" })
   .inputValidator((data: { environment: PaddleEnv }) => data)
   .handler(async ({ data, context }) => {
     const { supabase, userId } = context;
-    const { data: sub, error } = await supabase
+    const { data: sub, error } = await (supabase as any)
       .from("subscriptions")
       .select("paddle_customer_id, paddle_subscription_id")
       .eq("user_id", userId)
