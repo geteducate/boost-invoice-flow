@@ -1,6 +1,7 @@
-import { Link, useRouterState } from "@tanstack/react-router";
-import { ReactNode, useState } from "react";
-import { Bell, Building2, ChevronDown, FileText, Home, LayoutDashboard, ListChecks, Loader2, Lock, Menu, MessageSquare, PieChart, Plug, Receipt, Search, Settings, Users, Wallet, X } from "lucide-react";
+import { Link, useRouterState, useNavigate } from "@tanstack/react-router";
+import { ReactNode, useEffect, useState } from "react";
+import { Bell, Building2, ChevronDown, FileText, Home, LayoutDashboard, ListChecks, Loader2, Lock, Menu, MessageSquare, PieChart, Plug, Receipt, Search, Settings, Users, Wallet, X, AlertTriangle } from "lucide-react";
+import { toast } from "sonner";
 import { Logo } from "./Logo";
 import { Input } from "./ui/input";
 import { PaymentTestModeBanner } from "./PaymentTestModeBanner";
