@@ -113,8 +113,8 @@ export function AppShell({ children, title, subtitle, actions }: { children: Rea
               <span className="absolute right-1.5 top-1.5 h-1.5 w-1.5 rounded-full bg-destructive" />
             </button>
             <button className="flex items-center gap-2 rounded-lg border border-border px-2 py-1.5 hover:bg-muted">
-              <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-cta text-xs font-bold text-primary-foreground">JD</span>
-              <span className="hidden text-sm font-semibold sm:inline">Jane Doe</span>
+              <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-cta text-xs font-bold text-primary-foreground">{initials}</span>
+              <span className="hidden text-sm font-semibold sm:inline">{userName}</span>
               <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
             </button>
           </div>
