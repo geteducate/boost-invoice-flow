@@ -82,7 +82,6 @@ export function RecoverySimulator() {
 
   void daysLate;
 
-
   /* Live "invoice paid" ticker */
   type Tick = { id: number; client: string; amount: number };
   const [ticks, setTicks] = useState<Tick[]>([]);
