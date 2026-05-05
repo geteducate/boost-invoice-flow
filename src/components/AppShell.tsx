@@ -1,8 +1,11 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { ReactNode, useState } from "react";
-import { Bell, Building2, ChevronDown, FileText, Home, LayoutDashboard, ListChecks, Menu, MessageSquare, PieChart, Plug, Receipt, Search, Settings, Users, Wallet, X } from "lucide-react";
+import { Bell, Building2, ChevronDown, FileText, Home, LayoutDashboard, ListChecks, Loader2, Lock, Menu, MessageSquare, PieChart, Plug, Receipt, Search, Settings, Users, Wallet, X } from "lucide-react";
 import { Logo } from "./Logo";
 import { Input } from "./ui/input";
+import { PaymentTestModeBanner } from "./PaymentTestModeBanner";
+import { useSubscription } from "@/hooks/useSubscription";
+import { useSession } from "@/hooks/useSession";
 
 const items = [
   { to: "/app", label: "Dashboard", icon: LayoutDashboard, exact: true },
