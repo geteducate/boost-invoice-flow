@@ -1,6 +1,7 @@
-import { Link, useRouterState } from "@tanstack/react-router";
-import { ReactNode, useState } from "react";
-import { Bell, Building2, ChevronDown, FileText, Home, LayoutDashboard, ListChecks, Loader2, Lock, Menu, MessageSquare, PieChart, Plug, Receipt, Search, Settings, Users, Wallet, X } from "lucide-react";
+import { Link, useRouterState, useNavigate } from "@tanstack/react-router";
+import { ReactNode, useEffect, useState } from "react";
+import { Bell, Building2, ChevronDown, FileText, Home, LayoutDashboard, ListChecks, Loader2, Lock, Menu, MessageSquare, PieChart, Plug, Receipt, Search, Settings, Users, Wallet, X, AlertTriangle } from "lucide-react";
+import { toast } from "sonner";
 import { Logo } from "./Logo";
 import { Input } from "./ui/input";
 import { PaymentTestModeBanner } from "./PaymentTestModeBanner";
@@ -22,14 +23,40 @@ const items = [
 
 export function AppShell({ children, title, subtitle, actions }: { children: ReactNode; title?: string; subtitle?: string; actions?: ReactNode }) {
   const path = useRouterState({ select: (s) => s.location.pathname });
+  const search = useRouterState({ select: (s) => s.location.search });
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const { session, loading: sessionLoading } = useSession();
-  const { isActive, loading: subLoading } = useSubscription();
+  const { subscription, isActive, loading: subLoading } = useSubscription();
   const checking = sessionLoading || subLoading;
   const gated = !!session && !checking && !isActive;
+  const pastDue = subscription?.status === "past_due";
+  const trialing = subscription?.status === "trialing";
+  const trialDaysLeft = trialing && subscription?.current_period_end
+    ? Math.max(0, Math.ceil((new Date(subscription.current_period_end).getTime() - Date.now()) / 86400000))
+    : null;
+
+  useEffect(() => {
+    const params = new URLSearchParams(typeof search === "string" ? search : "");
+    if (params.get("checkout") === "success") {
+      toast.success("Subscription activated! Welcome aboard 🎉");
+      params.delete("checkout");
+      navigate({ to: path, search: Object.fromEntries(params), replace: true });
+    }
+  }, [search, path, navigate]);
+
+  const userName = session?.user?.user_metadata?.display_name || session?.user?.email?.split("@")[0] || "Account";
+  const initials = userName.slice(0, 2).toUpperCase();
+
   return (
     <div className="flex min-h-screen flex-col bg-surface">
       <PaymentTestModeBanner />
+      {pastDue && (
+        <div className="w-full bg-destructive/10 border-b border-destructive/30 px-4 py-2 text-center text-sm text-destructive">
+          <AlertTriangle className="inline h-4 w-4 mr-1.5 -mt-0.5" />
+          Your last payment failed. <Link to="/app/settings" className="underline font-semibold">Update payment method</Link>
+        </div>
+      )}
       <div className="flex flex-1 min-h-0">
       {/* Sidebar */}
       <aside className={`fixed inset-y-0 left-0 z-40 w-64 transform border-r border-border bg-sidebar transition-transform lg:static lg:translate-x-0 ${open ? "translate-x-0" : "-translate-x-full"}`}>
@@ -56,11 +83,19 @@ export function AppShell({ children, title, subtitle, actions }: { children: Rea
             );
           })}
         </nav>
-        <div className="absolute inset-x-3 bottom-3 rounded-xl border border-border bg-card p-4">
-          <p className="text-xs font-semibold">Trial: 12 days left</p>
-          <p className="mt-1 text-xs text-muted-foreground">Upgrade to keep automations running.</p>
-          <Link to="/pricing" className="mt-3 inline-flex w-full items-center justify-center rounded-lg bg-cta px-3 py-2 text-xs font-semibold text-primary-foreground">Upgrade</Link>
-        </div>
+        {trialDaysLeft !== null ? (
+          <div className="absolute inset-x-3 bottom-3 rounded-xl border border-border bg-card p-4">
+            <p className="text-xs font-semibold">Trial: {trialDaysLeft} day{trialDaysLeft === 1 ? "" : "s"} left</p>
+            <p className="mt-1 text-xs text-muted-foreground">Your card will be charged when the trial ends.</p>
+            <Link to="/app/settings" className="mt-3 inline-flex w-full items-center justify-center rounded-lg bg-cta px-3 py-2 text-xs font-semibold text-primary-foreground">Manage</Link>
+          </div>
+        ) : !isActive && session ? (
+          <div className="absolute inset-x-3 bottom-3 rounded-xl border border-border bg-card p-4">
+            <p className="text-xs font-semibold">No active plan</p>
+            <p className="mt-1 text-xs text-muted-foreground">Pick a plan to unlock your dashboard.</p>
+            <Link to="/pricing" className="mt-3 inline-flex w-full items-center justify-center rounded-lg bg-cta px-3 py-2 text-xs font-semibold text-primary-foreground">View plans</Link>
+          </div>
+        ) : null}
       </aside>
 
       {open && <div className="fixed inset-0 z-30 bg-black/30 lg:hidden" onClick={() => setOpen(false)} />}
@@ -78,8 +113,8 @@ export function AppShell({ children, title, subtitle, actions }: { children: Rea
               <span className="absolute right-1.5 top-1.5 h-1.5 w-1.5 rounded-full bg-destructive" />
             </button>
             <button className="flex items-center gap-2 rounded-lg border border-border px-2 py-1.5 hover:bg-muted">
-              <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-cta text-xs font-bold text-primary-foreground">JD</span>
-              <span className="hidden text-sm font-semibold sm:inline">Jane Doe</span>
+              <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-cta text-xs font-bold text-primary-foreground">{initials}</span>
+              <span className="hidden text-sm font-semibold sm:inline">{userName}</span>
               <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
             </button>
           </div>
