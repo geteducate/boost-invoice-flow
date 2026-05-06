@@ -11,6 +11,7 @@ import { Section } from "@/components/Section";
 import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/Reveal";
 import { WorkflowLoop } from "@/components/WorkflowLoop";
+import { AnimatedCounter } from "@/components/AnimatedCounter";
 import { usePaddleCheckout } from "@/hooks/usePaddleCheckout";
 import { supabase } from "@/integrations/supabase/client";
 
