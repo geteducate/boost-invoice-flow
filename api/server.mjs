@@ -1,6 +1,6 @@
 // Vercel Node.js serverless function: bridges Node req/res to the
 // TanStack Start Web `fetch` SSR entry built into ../dist/server/index.js
-import handler from "../dist/server/index.js";
+import handler from "../dist/server/server.js";
 
 export default async function (req, res) {
   const url = `https://${req.headers.host}${req.url}`;
