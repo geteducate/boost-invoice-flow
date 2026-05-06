@@ -78,7 +78,7 @@ export function DashboardPreview() {
           </span>
           <div>
             <p className="text-[11px] text-muted-foreground">Just now</p>
-            <p className="text-sm font-semibold">Helix Labs paid $460</p>
+            <p className="text-sm font-semibold">Client paid $460</p>
           </div>
         </div>
       </motion.div>
