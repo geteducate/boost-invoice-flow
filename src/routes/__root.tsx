@@ -30,14 +30,18 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
+      { title: "Boost Profits LLA" },
+      { name: "description", content: "Built for founders who want real momentum, not busywork. BoostProfits turns scattered effort into a sharper path to revenue, with tools that help you move faste" },
       { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { property: "og:title", content: "Boost Profits LLA" },
+      { property: "og:description", content: "Built for founders who want real momentum, not busywork. BoostProfits turns scattered effort into a sharper path to revenue, with tools that help you move faste" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "Boost Profits LLA" },
+      { name: "twitter:description", content: "Built for founders who want real momentum, not busywork. BoostProfits turns scattered effort into a sharper path to revenue, with tools that help you move faste" },
+      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/NAfpVvp3sabMt2FpNOqRdS13H4d2/social-images/social-1778047700918-Screenshot_2026-05-06_110752.webp" },
+      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/NAfpVvp3sabMt2FpNOqRdS13H4d2/social-images/social-1778047700918-Screenshot_2026-05-06_110752.webp" },
     ],
     links: [
       {
