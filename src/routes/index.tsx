@@ -204,15 +204,15 @@ function HowItWorks() {
           <h3 className="mt-3 text-h3">Structured enough for finance. Calm enough for clients.</h3>
           <p className="mt-4 text-sm leading-6 text-muted-foreground">Every step creates the next one automatically. Your team stops depending on memory, sticky notes and follow-up guilt.</p>
         </div>
-        <div className="grid gap-4 md:grid-cols-5">
-          {steps.map((s, i) => (
-            <div key={s.n} className="card-premium p-6 fade-up" style={{ animationDelay: `${i * 80}ms` }}>
+        <Stagger className="grid gap-4 md:grid-cols-5" step={110}>
+          {steps.map((s) => (
+            <div key={s.n} className="card-premium lift p-6 h-full">
               <p className="text-xs font-bold tracking-widest" style={{ color: "var(--primary-glow)" }}>{s.n}</p>
               <h3 className="mt-3 text-base font-bold">{s.t}</h3>
               <p className="mt-2 text-sm text-muted-foreground">{s.d}</p>
             </div>
           ))}
-        </div>
+        </Stagger>
       </div>
     </Section>
   );
