@@ -15,15 +15,19 @@ export function Captcha({ onVerify }: { onVerify: (token: string | null) => void
     setStatus("loading");
     setMessage("Loading bot protection…");
     getCaptchaSiteKey()
-      .then((r) => {
+      .then((r: any) => {
         if (r?.siteKey) {
           setSiteKey(r.siteKey);
           setStatus("ready");
-          setMessage("Verify you're human to continue.");
+          setMessage(r.isTestKey ? "Test mode — verify to continue." : "Verify you're human to continue.");
         } else {
           setSiteKey(null);
           setStatus("fallback");
-          setMessage("Bot protection unavailable — you can continue.");
+          setMessage(
+            r?.error === "site_key_missing"
+              ? "Bot protection not configured — you can continue."
+              : "Bot protection unavailable — you can continue.",
+          );
           onVerify("fallback-bypass");
         }
       })

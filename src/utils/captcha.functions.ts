@@ -7,11 +7,21 @@ import { z } from "zod";
 const TEST_SITE_KEY = "10000000-ffff-ffff-ffff-000000000001";
 const TEST_SECRET = "0x0000000000000000000000000000000000000000";
 
-function pickSiteKey() {
+function isValidSiteKey(k: string) {
+  // hCaptcha site keys are UUIDs (36 chars). Reject empties, secret-shaped
+  // values (start with 0x), and the official test key itself.
+  if (!k) return false;
+  if (k.startsWith("0x")) return false;
+  if (k.length < 30) return false;
+  if (k === TEST_SITE_KEY) return false;
+  return true;
+}
+
+function pickSiteKey(opts: { allowTestFallback: boolean }) {
   const k = (process.env.HCAPTCHA_SITE_KEY ?? "").trim();
-  // Reject obviously wrong values (empty, or someone pasted the secret here)
-  if (!k || k.startsWith("0x") || k.length < 20) return TEST_SITE_KEY;
-  return k;
+  if (isValidSiteKey(k)) return { key: k, isTest: false as const };
+  if (opts.allowTestFallback) return { key: TEST_SITE_KEY, isTest: true as const };
+  return { key: null, isTest: false as const };
 }
 
 function pickSecret() {
@@ -20,9 +30,30 @@ function pickSecret() {
   return s;
 }
 
+function isPreviewHost(host: string, origin: string) {
+  return (
+    host.includes("lovable.app") ||
+    host.includes("lovableproject.com") ||
+    origin.includes("lovable.app") ||
+    origin.includes("lovableproject.com")
+  );
+}
+
 export const getCaptchaSiteKey = createServerFn({ method: "GET" }).handler(async () => {
-  const siteKey = pickSiteKey();
-  return { siteKey, isTestKey: siteKey === TEST_SITE_KEY };
+  const host = (getRequestHeader("host") ?? "").toLowerCase();
+  const origin = (getRequestHeader("origin") ?? "").toLowerCase();
+  // Only allow the hCaptcha test key on Lovable preview/dev hosts.
+  // In production, NEVER serve the test key — it shows the
+  // "This hCaptcha is for testing only" banner to real users.
+  const picked = pickSiteKey({ allowTestFallback: isPreviewHost(host, origin) });
+  if (!picked.key) {
+    console.error("[captcha] HCAPTCHA_SITE_KEY missing or invalid in production", { host });
+    return { siteKey: null, isTestKey: false, error: "site_key_missing" as const };
+  }
+  if (picked.isTest) {
+    console.warn("[captcha] using hCaptcha TEST site key (preview only)", { host });
+  }
+  return { siteKey: picked.key, isTestKey: picked.isTest };
 });
 
 // Errors that mean the user did the right thing but our config / their network
@@ -50,11 +81,7 @@ export const verifyCaptcha = createServerFn({ method: "POST" })
     const host = (getRequestHeader("host") ?? "").toLowerCase();
     const origin = (getRequestHeader("origin") ?? "").toLowerCase();
     const remoteip = (getRequestHeader("x-forwarded-for") ?? "").split(",")[0]?.trim();
-    const isPreview =
-      host.includes("lovable.app") ||
-      host.includes("lovableproject.com") ||
-      origin.includes("lovable.app") ||
-      origin.includes("lovableproject.com");
+    const isPreview = isPreviewHost(host, origin);
 
     if (isPreview) {
       console.log("[captcha] preview bypass", { host });
