@@ -96,7 +96,11 @@ function Hero() {
             </div>
           </div>
         </div>
-        <div className="lg:col-span-6 scale-in">
+        <div className="relative lg:col-span-6 scale-in">
+          <div aria-hidden className="pointer-events-none absolute -inset-6 -z-10">
+            <div className="absolute right-6 top-6 h-40 w-40 rounded-3xl bg-gradient-to-br from-[var(--primary-glow)]/25 to-transparent blur-2xl float-slow" />
+            <div className="absolute -bottom-8 left-2 h-48 w-48 rounded-full bg-gradient-to-tr from-[var(--primary)]/20 to-transparent blur-2xl float-slow" style={{ animationDelay: "1.4s" }} />
+          </div>
           <DashboardPreview />
         </div>
       </div>
