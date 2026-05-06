@@ -1,7 +1,10 @@
-import { Link, useRouterState } from "@tanstack/react-router";
+import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { ReactNode, useState } from "react";
-import { Activity, ChevronDown, FileSearch, FileSpreadsheet, FileText, History, Inbox, LayoutDashboard, Menu, Radar, Settings2, Shield, ShieldAlert, Users2, X } from "lucide-react";
+import { Activity, ChevronDown, FileSearch, FileSpreadsheet, FileText, History, Inbox, LayoutDashboard, LogOut, Menu, Radar, Settings2, Shield, ShieldAlert, Users2, X } from "lucide-react";
+import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 import { Logo } from "./Logo";
+
 
 const items = [
   { to: "/admin", label: "Overview", icon: LayoutDashboard, exact: true },
@@ -17,7 +20,22 @@ const items = [
 
 export function AdminShell({ children, title, subtitle, actions }: { children: ReactNode; title?: string; subtitle?: string; actions?: ReactNode }) {
   const path = useRouterState({ select: (s) => s.location.pathname });
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
+  const [signingOut, setSigningOut] = useState(false);
+
+  async function handleSignOut() {
+    setSigningOut(true);
+    try {
+      await supabase.auth.signOut();
+      toast.success("Signed out of admin");
+      navigate({ to: "/login" });
+    } catch {
+      toast.error("Could not sign out — try again");
+      setSigningOut(false);
+    }
+  }
+
   return (
     <div className="flex min-h-screen bg-primary/[0.03]">
       <aside className={`fixed inset-y-0 left-0 z-40 w-64 transform border-r border-border bg-primary text-primary-foreground transition-transform lg:static lg:translate-x-0 ${open ? "translate-x-0" : "-translate-x-full"}`}>
