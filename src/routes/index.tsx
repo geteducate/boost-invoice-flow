@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import {
   ArrowRight, BadgeCheck, BarChart3, Bell, CheckCircle2, ClipboardList,
@@ -6,12 +6,17 @@ import {
   Star, TrendingUp, Users, Workflow, Zap,
 } from "lucide-react";
 import { MarketingLayout } from "@/components/MarketingLayout";
-import { RecoverySimulator } from "@/components/RecoverySimulator";
 import { DashboardPreview } from "@/components/DashboardPreview";
 import { Section } from "@/components/Section";
 import { Button } from "@/components/ui/button";
+import { Reveal } from "@/components/Reveal";
+import { WorkflowLoop } from "@/components/WorkflowLoop";
 import { usePaddleCheckout } from "@/hooks/usePaddleCheckout";
 import { supabase } from "@/integrations/supabase/client";
+
+const RecoverySimulator = lazy(() =>
+  import("@/components/RecoverySimulator").then((m) => ({ default: m.RecoverySimulator })),
+);
 
 export const Route = createFileRoute("/")({
   head: () => ({
