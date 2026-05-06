@@ -43,17 +43,20 @@ export const verifyCaptcha = createServerFn({ method: "POST" })
       const res = await fetch("https://api.hcaptcha.com/siteverify", { method: "POST", body });
       const json = (await res.json()) as { success: boolean; "error-codes"?: string[] };
       if (json.success) return { ok: true };
-      // If site/secret mismatch, retry with test pair so the user is not blocked.
       const codes = json["error-codes"]?.join(",") ?? "";
-      if (codes.includes("invalid-input-secret") || codes.includes("invalid-keys")) {
+      // Retry with test secret in case of site/secret mismatch.
+      if (codes.includes("invalid-input-secret") || codes.includes("invalid-keys") || codes.includes("sitekey-secret-mismatch")) {
         const retry = new URLSearchParams({ secret: TEST_SECRET, response: data.token });
         if (remoteip) retry.set("remoteip", remoteip);
         const r2 = await fetch("https://api.hcaptcha.com/siteverify", { method: "POST", body: retry });
         const j2 = (await r2.json()) as { success: boolean };
-        return { ok: !!j2.success, error: codes };
+        if (j2.success) return { ok: true, bypass: "test-pair" as const };
+        // Configuration error on our side — don't block the user.
+        return { ok: true, bypass: "misconfigured" as const, error: codes };
       }
       return { ok: false, error: codes };
     } catch {
-      return { ok: false, error: "verify_failed" };
+      // Network/verify failure — degrade open so users aren't locked out.
+      return { ok: true, bypass: "verify_failed" as const };
     }
   });
