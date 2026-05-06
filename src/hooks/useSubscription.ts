@@ -19,6 +19,7 @@ export function useSubscription() {
   const { session, loading: sessionLoading } = useSession();
   const [subscription, setSubscription] = useState<Subscription | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const fetchSub = async (userId: string) => {
     const { data } = await (supabase as any)
@@ -35,8 +36,19 @@ export function useSubscription() {
 
   useEffect(() => {
     if (sessionLoading) return;
-    if (!session) { setSubscription(null); setLoading(false); return; }
+    if (!session) { setSubscription(null); setIsAdmin(false); setLoading(false); return; }
     fetchSub(session.user.id);
+
+    // Check admin role — admins get full access regardless of subscription
+    (async () => {
+      const { data } = await (supabase as any)
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", session.user.id)
+        .eq("role", "admin")
+        .maybeSingle();
+      setIsAdmin(!!data);
+    })();
 
     const channel = supabase
       .channel(`subs-${session.user.id}`)
@@ -53,15 +65,17 @@ export function useSubscription() {
 
   const now = Date.now();
   const periodActive = !subscription?.current_period_end || new Date(subscription.current_period_end).getTime() > now;
-  const isActive = !!subscription && (
+  const subActive = !!subscription && (
     (["active", "trialing", "past_due"].includes(subscription.status) && periodActive) ||
     (subscription.status === "canceled" && periodActive)
   );
+  const isActive = isAdmin || subActive;
 
-  const tier = subscription?.product_id === "starter_plan" ? "starter"
+  const tier = isAdmin ? "business"
+    : subscription?.product_id === "starter_plan" ? "starter"
     : subscription?.product_id === "pro_plan" ? "pro"
     : subscription?.product_id === "business_plan" ? "business"
     : null;
 
-  return { subscription, isActive, tier, loading: loading || sessionLoading };
+  return { subscription, isActive, tier, isAdmin, loading: loading || sessionLoading };
 }
