@@ -445,12 +445,11 @@ function Trust() {
   const badges = ["GDPR aligned", "SOC 2 (in progress)", "TLS 1.3", "AES-256 at rest", "PCI-ready exports"];
   return (
     <Section eyebrow="Trust & security" title="Built to be trusted with money." description="Boost Profits handles invoices and client data with the seriousness it deserves.">
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {trust.map((t, i) => (
+      <Stagger className="grid gap-4 md:grid-cols-2 lg:grid-cols-3" step={70}>
+        {trust.map((t) => (
           <div
             key={t.t}
-            className="group relative card-premium lift overflow-hidden p-6"
-            style={{ animationDelay: `${i * 60}ms` }}
+            className="group relative card-premium lift overflow-hidden p-6 h-full"
           >
             <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-gradient-to-br from-[var(--primary-glow)]/15 to-transparent transition-transform duration-500 group-hover:scale-125" />
             <span className="relative inline-flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-[var(--primary)] to-[var(--primary-glow)] text-primary-foreground shadow-elegant">
@@ -460,7 +459,7 @@ function Trust() {
             <p className="relative mt-2 text-sm text-muted-foreground">{t.d}</p>
           </div>
         ))}
-      </div>
+      </Stagger>
       <div className="mt-8 flex flex-wrap items-center justify-center gap-2">
         {badges.map((b) => (
           <span key={b} className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background px-3 py-1.5 text-xs font-semibold text-muted-foreground">
