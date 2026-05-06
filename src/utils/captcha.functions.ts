@@ -81,11 +81,7 @@ export const verifyCaptcha = createServerFn({ method: "POST" })
     const host = (getRequestHeader("host") ?? "").toLowerCase();
     const origin = (getRequestHeader("origin") ?? "").toLowerCase();
     const remoteip = (getRequestHeader("x-forwarded-for") ?? "").split(",")[0]?.trim();
-    const isPreview =
-      host.includes("lovable.app") ||
-      host.includes("lovableproject.com") ||
-      origin.includes("lovable.app") ||
-      origin.includes("lovableproject.com");
+    const isPreview = isPreviewHost(host, origin);
 
     if (isPreview) {
       console.log("[captcha] preview bypass", { host });
