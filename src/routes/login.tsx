@@ -42,13 +42,19 @@ export function AuthShell({ mode }: { mode: "login" | "signup" }) {
     }
     setLoading(true);
     try {
-      if (captchaToken !== "fallback-bypass") {
-        const v = await verifyCaptcha({ data: { token: captchaToken } }).catch(() => ({ ok: true }));
-        if (!v.ok) {
-          toast.error("Captcha verification failed");
-          setLoading(false);
-          return;
+      const v = await verifyCaptcha({ data: { token: captchaToken } }).catch((e) => {
+        console.warn("[captcha] verify call failed, allowing", e);
+        return { ok: true } as { ok: boolean; retry?: boolean; error?: string };
+      });
+      if (!v.ok) {
+        if ((v as any).retry) {
+          toast.error("Captcha expired — please complete it again.");
+        } else {
+          toast.error("Captcha verification failed. Please try again.");
         }
+        setCaptchaToken(null);
+        setLoading(false);
+        return;
       }
       if (mode === "signup") {
         const { error } = await supabase.auth.signUp({
