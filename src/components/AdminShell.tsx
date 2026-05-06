@@ -70,15 +70,27 @@ export function AdminShell({ children, title, subtitle, actions }: { children: R
             <span className="text-sm font-semibold">Control room</span>
           </div>
           <div className="ml-auto flex items-center gap-2">
-            <button className="inline-flex items-center gap-2 rounded-lg border border-border px-3 py-1.5 text-xs font-semibold hover:bg-muted">
+            <span className="hidden items-center gap-1.5 rounded-full border border-warning/30 bg-warning/10 px-2.5 py-1 text-[11px] font-semibold text-[oklch(0.45_0.15_60)] md:inline-flex">
+              <Shield className="h-3 w-3" /> Owner Admin Access
+            </span>
+            <button className="hidden items-center gap-2 rounded-lg border border-border px-3 py-1.5 text-xs font-semibold hover:bg-muted sm:inline-flex">
               <Settings2 className="h-3.5 w-3.5" /> Workspace
+            </button>
+            <button
+              onClick={handleSignOut}
+              disabled={signingOut}
+              className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-xs font-semibold transition-colors hover:border-destructive/40 hover:bg-destructive/10 hover:text-destructive disabled:opacity-50"
+            >
+              <LogOut className="h-3.5 w-3.5" />
+              {signingOut ? "Signing out…" : "Sign out"}
             </button>
             <button className="flex items-center gap-2 rounded-lg border border-border px-2 py-1.5">
               <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-cta text-xs font-bold text-primary-foreground">AD</span>
-              <span className="hidden text-sm font-semibold sm:inline">Admin</span>
+              <span className="hidden text-sm font-semibold sm:inline">Owner</span>
               <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
             </button>
           </div>
+
         </header>
         <main className="flex-1 px-4 py-6 md:px-8 md:py-8">
           {(title || actions) && (
