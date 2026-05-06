@@ -9,7 +9,7 @@ import { MarketingLayout } from "@/components/MarketingLayout";
 import { DashboardPreview } from "@/components/DashboardPreview";
 import { Section } from "@/components/Section";
 import { Button } from "@/components/ui/button";
-import { Reveal } from "@/components/Reveal";
+import { Reveal, Stagger } from "@/components/Reveal";
 import { WorkflowLoop } from "@/components/WorkflowLoop";
 import { AnimatedCounter } from "@/components/AnimatedCounter";
 import { usePaddleCheckout } from "@/hooks/usePaddleCheckout";
@@ -96,7 +96,11 @@ function Hero() {
             </div>
           </div>
         </div>
-        <div className="lg:col-span-6 scale-in">
+        <div className="relative lg:col-span-6 scale-in">
+          <div aria-hidden className="pointer-events-none absolute -inset-6 -z-10">
+            <div className="absolute right-6 top-6 h-40 w-40 rounded-3xl bg-gradient-to-br from-[var(--primary-glow)]/25 to-transparent blur-2xl float-slow" />
+            <div className="absolute -bottom-8 left-2 h-48 w-48 rounded-full bg-gradient-to-tr from-[var(--primary)]/20 to-transparent blur-2xl float-slow" style={{ animationDelay: "1.4s" }} />
+          </div>
           <DashboardPreview />
         </div>
       </div>
@@ -166,9 +170,9 @@ function Problem() {
             ))}
           </div>
         </div>
-        <div className="grid gap-4 md:grid-cols-2">
+        <Stagger className="grid gap-4 md:grid-cols-2" step={90}>
           {items.map((it) => (
-            <div key={it.title} className="card-premium lift p-6">
+            <div key={it.title} className="card-premium lift p-6 h-full">
               <span className="inline-flex h-11 w-11 items-center justify-center rounded-xl bg-primary/8 text-primary">
                 <it.icon className="h-5 w-5" />
               </span>
@@ -176,7 +180,7 @@ function Problem() {
               <p className="mt-2 text-sm text-muted-foreground">{it.desc}</p>
             </div>
           ))}
-        </div>
+        </Stagger>
       </div>
     </Section>
   );
@@ -200,15 +204,15 @@ function HowItWorks() {
           <h3 className="mt-3 text-h3">Structured enough for finance. Calm enough for clients.</h3>
           <p className="mt-4 text-sm leading-6 text-muted-foreground">Every step creates the next one automatically. Your team stops depending on memory, sticky notes and follow-up guilt.</p>
         </div>
-        <div className="grid gap-4 md:grid-cols-5">
-          {steps.map((s, i) => (
-            <div key={s.n} className="card-premium p-6 fade-up" style={{ animationDelay: `${i * 80}ms` }}>
+        <Stagger className="grid gap-4 md:grid-cols-5" step={110}>
+          {steps.map((s) => (
+            <div key={s.n} className="card-premium lift p-6 h-full">
               <p className="text-xs font-bold tracking-widest" style={{ color: "var(--primary-glow)" }}>{s.n}</p>
               <h3 className="mt-3 text-base font-bold">{s.t}</h3>
               <p className="mt-2 text-sm text-muted-foreground">{s.d}</p>
             </div>
           ))}
-        </div>
+        </Stagger>
       </div>
     </Section>
   );
@@ -249,9 +253,9 @@ function Features() {
   ];
   return (
     <Section eyebrow="Features" title="Everything you need. Nothing you don't." description="A real revenue operating system — compact, credible, and premium in the details.">
-      <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+      <Stagger className="grid gap-5 md:grid-cols-2 lg:grid-cols-3" step={80}>
         {groups.map((g) => (
-          <div key={g.cat} className="card-premium lift p-6">
+          <div key={g.cat} className="card-premium lift p-6 h-full">
             <div className="flex items-center justify-between">
               <span className="text-eyebrow">{g.cat}</span>
               <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-cta text-primary-foreground shadow-elegant">
@@ -268,7 +272,7 @@ function Features() {
             </ul>
           </div>
         ))}
-      </div>
+      </Stagger>
     </Section>
   );
 }
@@ -352,9 +356,9 @@ function Testimonials() {
         </div>
       </div>
 
-      <div className="grid gap-5 md:grid-cols-3">
-        {items.map((t, i) => (
-          <figure key={i} className="card-premium lift p-6">
+      <Stagger className="grid gap-5 md:grid-cols-3" step={120}>
+        {items.map((t) => (
+          <figure key={t.r} className="card-premium lift p-6 h-full">
             <div className="flex items-center justify-between">
               <div className="flex gap-0.5" style={{ color: "var(--primary-glow)" }}>
                 {Array.from({ length: 5 }).map((_, k) => <Star key={k} className="h-3.5 w-3.5 fill-current" />)}
@@ -368,7 +372,7 @@ function Testimonials() {
             </figcaption>
           </figure>
         ))}
-      </div>
+      </Stagger>
     </div>
   );
 }
@@ -441,12 +445,11 @@ function Trust() {
   const badges = ["GDPR aligned", "SOC 2 (in progress)", "TLS 1.3", "AES-256 at rest", "PCI-ready exports"];
   return (
     <Section eyebrow="Trust & security" title="Built to be trusted with money." description="Boost Profits handles invoices and client data with the seriousness it deserves.">
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {trust.map((t, i) => (
+      <Stagger className="grid gap-4 md:grid-cols-2 lg:grid-cols-3" step={70}>
+        {trust.map((t) => (
           <div
             key={t.t}
-            className="group relative card-premium lift overflow-hidden p-6"
-            style={{ animationDelay: `${i * 60}ms` }}
+            className="group relative card-premium lift overflow-hidden p-6 h-full"
           >
             <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-gradient-to-br from-[var(--primary-glow)]/15 to-transparent transition-transform duration-500 group-hover:scale-125" />
             <span className="relative inline-flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-[var(--primary)] to-[var(--primary-glow)] text-primary-foreground shadow-elegant">
@@ -456,7 +459,7 @@ function Trust() {
             <p className="relative mt-2 text-sm text-muted-foreground">{t.d}</p>
           </div>
         ))}
-      </div>
+      </Stagger>
       <div className="mt-8 flex flex-wrap items-center justify-center gap-2">
         {badges.map((b) => (
           <span key={b} className="inline-flex items-center gap-1.5 rounded-full border border-border bg-background px-3 py-1.5 text-xs font-semibold text-muted-foreground">

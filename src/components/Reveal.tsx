@@ -1,10 +1,9 @@
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { Children, useEffect, useRef, useState, type ReactNode } from "react";
 
 /**
  * Lightweight scroll-reveal using IntersectionObserver.
- * - Fade + slight slide, max 300ms
- * - Respects prefers-reduced-motion
- * - Disables non-essential motion on small screens
+ * Fade + slide (translateY 28px → 0). 480ms ease-out cubic.
+ * Respects prefers-reduced-motion. Quieter on small screens.
  */
 export function Reveal({
   children,
@@ -23,8 +22,7 @@ export function Reveal({
 
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const isMobile = window.matchMedia("(max-width: 640px)").matches;
-    if (mq.matches || isMobile) {
+    if (mq.matches) {
       setReduced(true);
       setVisible(true);
       return;
@@ -51,12 +49,42 @@ export function Reveal({
     ? undefined
     : {
         transitionDelay: `${delay}ms`,
-        transform: visible ? "translate3d(0,0,0)" : "translate3d(0,12px,0)",
+        transform: visible ? "translate3d(0,0,0)" : "translate3d(0,28px,0)",
         opacity: visible ? 1 : 0,
-        transition: "opacity 280ms ease-out, transform 280ms ease-out",
+        transition:
+          "opacity 520ms cubic-bezier(.22,.61,.36,1), transform 520ms cubic-bezier(.22,.61,.36,1)",
         willChange: "opacity, transform",
       };
 
   // @ts-expect-error dynamic tag
   return <Tag ref={ref} className={className} style={style}>{children}</Tag>;
+}
+
+/**
+ * Staggers direct children with incremental Reveal delays.
+ * Usage: <Stagger className="grid ...">{items.map(...)}</Stagger>
+ */
+export function Stagger({
+  children,
+  step = 90,
+  start = 0,
+  className = "",
+  childClassName = "",
+}: {
+  children: ReactNode;
+  step?: number;
+  start?: number;
+  className?: string;
+  childClassName?: string;
+}) {
+  const items = Children.toArray(children);
+  return (
+    <div className={className}>
+      {items.map((child, i) => (
+        <Reveal key={i} delay={start + i * step} className={childClassName}>
+          {child}
+        </Reveal>
+      ))}
+    </div>
+  );
 }
