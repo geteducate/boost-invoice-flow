@@ -1,7 +1,10 @@
-import { Link, useRouterState } from "@tanstack/react-router";
+import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { ReactNode, useState } from "react";
-import { Activity, ChevronDown, FileSearch, FileSpreadsheet, FileText, History, Inbox, LayoutDashboard, Menu, Radar, Settings2, Shield, ShieldAlert, Users2, X } from "lucide-react";
+import { Activity, ChevronDown, FileSearch, FileSpreadsheet, FileText, History, Inbox, LayoutDashboard, LogOut, Menu, Radar, Settings2, Shield, ShieldAlert, Users2, X } from "lucide-react";
+import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 import { Logo } from "./Logo";
+
 
 const items = [
   { to: "/admin", label: "Overview", icon: LayoutDashboard, exact: true },
@@ -17,7 +20,22 @@ const items = [
 
 export function AdminShell({ children, title, subtitle, actions }: { children: ReactNode; title?: string; subtitle?: string; actions?: ReactNode }) {
   const path = useRouterState({ select: (s) => s.location.pathname });
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
+  const [signingOut, setSigningOut] = useState(false);
+
+  async function handleSignOut() {
+    setSigningOut(true);
+    try {
+      await supabase.auth.signOut();
+      toast.success("Signed out of admin");
+      navigate({ to: "/login" });
+    } catch {
+      toast.error("Could not sign out — try again");
+      setSigningOut(false);
+    }
+  }
+
   return (
     <div className="flex min-h-screen bg-primary/[0.03]">
       <aside className={`fixed inset-y-0 left-0 z-40 w-64 transform border-r border-border bg-primary text-primary-foreground transition-transform lg:static lg:translate-x-0 ${open ? "translate-x-0" : "-translate-x-full"}`}>
@@ -52,15 +70,27 @@ export function AdminShell({ children, title, subtitle, actions }: { children: R
             <span className="text-sm font-semibold">Control room</span>
           </div>
           <div className="ml-auto flex items-center gap-2">
-            <button className="inline-flex items-center gap-2 rounded-lg border border-border px-3 py-1.5 text-xs font-semibold hover:bg-muted">
+            <span className="hidden items-center gap-1.5 rounded-full border border-warning/30 bg-warning/10 px-2.5 py-1 text-[11px] font-semibold text-[oklch(0.45_0.15_60)] md:inline-flex">
+              <Shield className="h-3 w-3" /> Owner Admin Access
+            </span>
+            <button className="hidden items-center gap-2 rounded-lg border border-border px-3 py-1.5 text-xs font-semibold hover:bg-muted sm:inline-flex">
               <Settings2 className="h-3.5 w-3.5" /> Workspace
+            </button>
+            <button
+              onClick={handleSignOut}
+              disabled={signingOut}
+              className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-xs font-semibold transition-colors hover:border-destructive/40 hover:bg-destructive/10 hover:text-destructive disabled:opacity-50"
+            >
+              <LogOut className="h-3.5 w-3.5" />
+              {signingOut ? "Signing out…" : "Sign out"}
             </button>
             <button className="flex items-center gap-2 rounded-lg border border-border px-2 py-1.5">
               <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-cta text-xs font-bold text-primary-foreground">AD</span>
-              <span className="hidden text-sm font-semibold sm:inline">Admin</span>
+              <span className="hidden text-sm font-semibold sm:inline">Owner</span>
               <ChevronDown className="h-3.5 w-3.5 text-muted-foreground" />
             </button>
           </div>
+
         </header>
         <main className="flex-1 px-4 py-6 md:px-8 md:py-8">
           {(title || actions) && (
