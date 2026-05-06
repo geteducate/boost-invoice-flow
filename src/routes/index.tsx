@@ -300,11 +300,11 @@ function Proof() {
         </div>
         <div className="grid gap-4 lg:col-span-2">
           {[
-            { v: "$18.6k", l: "Average recovered per agency / quarter" },
-            { v: "6 hrs", l: "Saved per week on payment chasing" },
-            { v: "−42%", l: "Reduction in 30-day overdue invoices" },
-          ].map((s) => (
-            <div key={s.l} className="card-premium p-5">
+            { v: <><AnimatedCounter value={18.6} decimals={1} prefix="$" />k</>, l: "Average recovered per agency / quarter" },
+            { v: <><AnimatedCounter value={6} /> hrs</>, l: "Saved per week on payment chasing" },
+            { v: <>−<AnimatedCounter value={42} />%</>, l: "Reduction in 30-day overdue invoices" },
+          ].map((s, i) => (
+            <div key={i} className="card-premium p-5">
               <p className="text-3xl font-extrabold tracking-tight">{s.v}</p>
               <p className="mt-1 text-sm text-muted-foreground">{s.l}</p>
             </div>
