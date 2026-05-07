@@ -112,10 +112,10 @@ function Hero() {
 
 function SocialProof() {
   const stats: { v: React.ReactNode; l: string }[] = [
-    { v: <><AnimatedCounter value={200} />+</>, l: "Agencies in early access" },
-    { v: <><AnimatedCounter value={1.4} decimals={1} prefix="$" />M+ </>, l: "Invoices processed in beta" },
-    { v: <><AnimatedCounter value={4.9} decimals={1} /> / 5</>, l: "Average customer rating" },
-    { v: <>&lt; <AnimatedCounter value={15} /> min</>, l: "Average time to live" },
+    { v: <><AnimatedCounter value={63} duration={1800} />+</>, l: "Agencies in early access" },
+    { v: <><AnimatedCounter value={1.4} decimals={1} prefix="$" duration={1800} />M+</>, l: "Invoices processed in beta" },
+    { v: <><AnimatedCounter value={4.8} decimals={1} duration={1800} /> / 5</>, l: "Average customer rating" },
+    { v: <>&lt; <AnimatedCounter value={12} duration={1800} /> min</>, l: "Average time to live" },
   ];
   return (
     <section className="border-y border-border bg-background py-10">
@@ -304,9 +304,9 @@ function Proof() {
         </div>
         <div className="grid gap-4 lg:col-span-2">
           {[
-            { v: <><AnimatedCounter value={18.6} decimals={1} prefix="$" />k</>, l: "Average recovered per agency / quarter" },
-            { v: <><AnimatedCounter value={6} /> hrs</>, l: "Saved per week on payment chasing" },
-            { v: <>−<AnimatedCounter value={42} />%</>, l: "Reduction in 30-day overdue invoices" },
+            { v: <><AnimatedCounter value={48.2} decimals={1} prefix="$" duration={1800} />k</>, l: "Average recovered per agency / quarter" },
+            { v: <><AnimatedCounter value={6.5} decimals={1} duration={1800} /> hrs</>, l: "Saved per week on payment chasing" },
+            { v: <>−<AnimatedCounter value={61} duration={1800} />%</>, l: "Reduction in 30-day overdue invoices" },
           ].map((s, i) => (
             <div key={i} className="card-premium p-5">
               <p className="text-3xl font-extrabold tracking-tight">{s.v}</p>
