@@ -21,10 +21,12 @@ export function MarketingLayout({ children }: { children: React.ReactNode }) {
         <div className="absolute -top-40 left-1/2 h-[480px] w-[900px] -translate-x-1/2 rounded-full bg-[radial-gradient(ellipse_at_center,oklch(0.62_0.13_250/0.12),transparent_60%)] blur-3xl" />
         <div className="absolute bottom-[-200px] right-[-100px] h-[420px] w-[620px] rounded-full bg-[radial-gradient(ellipse_at_center,oklch(0.32_0.09_263/0.10),transparent_70%)] blur-3xl" />
       </div>
+      <ScrollProgress />
       <SiteHeader />
       <main className="flex-1">{children}</main>
       <SiteFooter />
       <ChatWidget />
+      <MobileStickyCTA />
     </div>
   );
 }
