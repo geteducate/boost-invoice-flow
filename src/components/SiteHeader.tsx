@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Menu, X, LogOut, LayoutDashboard, User as UserIcon } from "lucide-react";
 import { Logo } from "./Logo";
 import { Button } from "./ui/button";
+import { ThemeToggle } from "./ThemeToggle";
 import { useSession, signOut } from "@/hooks/useSession";
 import {
   DropdownMenu,
@@ -68,6 +69,7 @@ export function SiteHeader() {
           </nav>
         </div>
         <div className="hidden items-center gap-2 md:flex">
+          <ThemeToggle />
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -109,13 +111,16 @@ export function SiteHeader() {
             </>
           )}
         </div>
-        <button
-          className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-border md:hidden"
-          onClick={() => setOpen((o) => !o)}
-          aria-label="Toggle menu"
-        >
-          {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-        </button>
+        <div className="flex items-center gap-2 md:hidden">
+          <ThemeToggle />
+          <button
+            className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-border"
+            onClick={() => setOpen((o) => !o)}
+            aria-label="Toggle menu"
+          >
+            {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
+        </div>
       </div>
       {open && (
         <div className="border-t border-border bg-background md:hidden">
